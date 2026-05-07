@@ -5,10 +5,10 @@ export type CategoriaDocument = HydratedDocument<Categoria>;
 
 @Schema({ timestamps: true })
 export class Categoria {
-  @Prop({ required: true, unique: true, trim: true })
-  nombre: string | undefined;
+  @Prop({ type: String, required: true, unique: true, trim: true })
+  nombre: string;
 
-  @Prop({ maxlength: 200, trim: true })
+  @Prop({ type: String, maxlength: 200, trim: true })
   descripcion?: string;
 }
 

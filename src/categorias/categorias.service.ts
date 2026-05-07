@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Categoria, CategoriaDocument } from './schemas/categoria.schema';
 import { Producto } from '../productos/schemas/producto.schema';
-import { CreateCategoriaDto } from './dto/create-categoria.dto';
-import { UpdateCategoriaDto } from './dto/update-categoria.dto';
+import { CreateCategoriaDto } from './dto/create-categorias.dto';
+import { UpdateCategoriaDto } from './dto/update-categorias.dto';
 
 @Injectable()
 export class CategoriasService {

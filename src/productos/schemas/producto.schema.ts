@@ -5,20 +5,20 @@ export type ProductoDocument = HydratedDocument<Producto>;
 
 @Schema({ timestamps: true })
 export class Producto {
-  @Prop({ required: true, unique: true, trim: true })
-  nombre: string | undefined;
+  @Prop({ type: String, required: true, unique: true, trim: true })
+  nombre: string;
 
-  @Prop({ required: true, min: 0.01 })
-  precio: number | undefined;
+  @Prop({ type: Number, required: true, min: 0.01 })
+  precio: number;
 
-  @Prop({ required: true, min: 0 })
-  stock: number | undefined;
+  @Prop({ type: Number, required: true, min: 0 })
+  stock: number;
 
   @Prop({ type: Types.ObjectId, ref: 'Categoria', required: true })
-  categoria: Types.ObjectId | undefined;
+  categoria: Types.ObjectId;
 
-  @Prop({ default: true })
-  activo: boolean | undefined;
+  @Prop({ type: Boolean, default: true })
+  activo: boolean;
 }
 
 export const ProductoSchema = SchemaFactory.createForClass(Producto);

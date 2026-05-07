@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Patch, Delete, Param, Body, BadRequestException, HttpCode, HttpStatus } from '@nestjs/common';
 import { isValidObjectId } from 'mongoose';
 import { CategoriasService } from './categorias.service';
-import { CreateCategoriaDto } from './dto/create-categoria.dto';
-import { UpdateCategoriaDto } from './dto/update-categoria.dto';
+import { CreateCategoriaDto } from './dto/create-categorias.dto';
+import { UpdateCategoriaDto } from './dto/update-categorias.dto';
 
 @Controller('categorias')
 export class CategoriasController {
