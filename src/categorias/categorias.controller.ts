@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, BadRequestException, HttpCode, HttpStatus } from '@nestjs/common';
+import { isValidObjectId } from 'mongoose';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
@@ -7,28 +8,37 @@ import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
 
-    @Post() 
-    async create(@Body() createCategoriaDto: CreateCategoriaDto) {
-        return await this.categoriasService.create(createCategoriaDto);
-    }
+  private validarId(id: string) {
+    if (!isValidObjectId(id)) throw new BadRequestException(`El id "${id}" no es un ObjectId válido`);
+  }
 
-    @Put(':id') 
-    async update(@Param('id') id: string, @Body() updateCategoriaDto: UpdateCategoriaDto) {
-        return await this.categoriasService.update(id, updateCategoriaDto);
-    }
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() dto: CreateCategoriaDto) {
+    return this.categoriasService.create(dto);
+  }
 
-    @Delete(':id')  
-    async delete(@Param('id') id: string) {
-        return await this.categoriasService.delete(id);
-    }
+  @Get()
+  findAll() {
+    return this.categoriasService.findAll();
+  }
 
-    @Get() 
-    async findAll() {
-        return await this.categoriasService.findAll();
-    }   
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    this.validarId(id);
+    return this.categoriasService.findOne(id);
+  }
 
-    @Get(':id') 
-    async findOne(@Param('id') id: string) {
-        return await this.categoriasService.findOne(id);    
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateCategoriaDto) {
+    this.validarId(id);
+    return this.categoriasService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id') id: string) {
+    this.validarId(id);
+    return this.categoriasService.remove(id);
+  }
 }
