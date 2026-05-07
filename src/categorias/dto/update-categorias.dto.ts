@@ -1,12 +1,12 @@
-import { MaxLength, IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, MaxLength } from 'class-validator';
 
-export class UpdateCategoriasDto {
+export class UpdateCategoriaDto {
+  @IsOptional()
   @IsString()
   nombre?: string;
 
   @IsOptional()
-  @MaxLength(300)
   @IsString()
+  @MaxLength(200, { message: 'La descripción no puede superar 200 caracteres' })
   descripcion?: string;
-
 }
