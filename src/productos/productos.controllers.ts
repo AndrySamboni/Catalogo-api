@@ -1,35 +1,53 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from "@nestjs/common";
-import { ProductoService } from "./productos.service";
-import { CreateProductosDto } from "./dto/create-productos.dto";
-import { UpdateProductosDto } from "./dto/update-productos.dto";
+import { Controller, Get, Post, Patch, Delete, Param, Body, Query, BadRequestException, HttpCode, HttpStatus } from '@nestjs/common';
+import { isValidObjectId } from 'mongoose';
+import { ProductosService } from './productos.service';
+import { CreateProductoDto } from './dto/create-producto.dto';
+import { UpdateProductoDto } from './dto/update-producto.dto';
 
 @Controller('productos')
 export class ProductosController {
-  constructor(private readonly productosService: ProductoService) {}
+  constructor(private readonly productosService: ProductosService) {}
+
+  private validarId(id: string) {
+    if (!isValidObjectId(id)) throw new BadRequestException(`El id "${id}" no es un ObjectId válido`);
+  }
 
   @Post()
-  async create(@Body() createProductosDto: CreateProductosDto) {
-    return await this.productosService.create(createProductosDto);
-  }
-
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProductosDto: UpdateProductosDto) {
-    return await this.productosService.update(id, updateProductosDto);
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return await this.productosService.delete(id);
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() dto: CreateProductoDto) {
+    return this.productosService.create(dto);
   }
 
   @Get()
-  async findAll() {
-    return await this.productosService.findAll();
+  findAll(
+    @Query('incluirInactivos') incluirInactivos: string,
+    @Query('categoria') categoria: string,
+  ) {
+    return this.productosService.findAll(incluirInactivos === 'true', categoria);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.productosService.findOne(id);
+  findOne(@Param('id') id: string) {
+    this.validarId(id);
+    return this.productosService.findOne(id);
+  }
+
+  @Patch(':id/desactivar')
+  desactivar(@Param('id') id: string) {
+    this.validarId(id);
+    return this.productosService.desactivar(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateProductoDto) {
+    this.validarId(id);
+    return this.productosService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id') id: string) {
+    this.validarId(id);
+    return this.productosService.remove(id);
   }
 }
-
